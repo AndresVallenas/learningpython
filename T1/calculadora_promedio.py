@@ -1,21 +1,20 @@
 def main():
-	asignaturas=[]
-	calificaciones=[]
-	aprobados=[]
-	desaprobados=[]
 	asignaturas, calificaciones = ingresar_calificaciones()
-	try:
-		umbral = int(input("Ingresa el valor del umbral: "))
-	except ValueError:
-		print("Umbral incorrecto, valor predeterminado del umbral: 5")
-		umbral=5
-	aprobados, desaprobados = determinar_estado(calificaciones,umbral)
-	promCalififaciones = calcular_promedio(calificaciones)
-	imprimirMaterias(aprobados, desaprobados, asignaturas,calificaciones)
-	print(f"\nPromedio de asignaturas: {promCalififaciones:.2}")
-	indiceMax,indiceMin = encontrar_extremos(calificaciones)
-	print(f"Materia con mayor nota: {asignaturas[indiceMax]} / {calificaciones[indiceMax]}")
-	print(f"Materia con menor nota: {asignaturas[indiceMin]} / {calificaciones[indiceMin]}")
+	if calificaciones:
+		try:
+			umbral = int(input("Ingresa el valor del umbral: "))
+		except ValueError:
+			print("Umbral incorrecto, valor predeterminado del umbral: 5")
+			umbral=5
+		aprobados, desaprobados = determinar_estado(calificaciones,umbral)
+		promedio = calcular_promedio(calificaciones)
+		mostrar_resumen(aprobados, desaprobados, asignaturas,calificaciones)
+		print(f"\nPromedio de asignaturas: {round(promedio,2)}")
+		indiceMax,indiceMin = encontrar_extremos(calificaciones)
+		print(f"Materia con mayor nota: {asignaturas[indiceMax]} / {calificaciones[indiceMax]}")
+		print(f"Materia con menor nota: {asignaturas[indiceMin]} / {calificaciones[indiceMin]}")
+	else:
+		print("No se ingresaron datos!")
 
 def ingresar_calificaciones():
 	asignaturas=[]
@@ -43,7 +42,10 @@ def ingresar_calificaciones():
 	return asignaturas,calificaciones
 	
 def calcular_promedio(calificaciones: list[int]) -> int:
-	return sum(calificaciones)/(len(calificaciones))
+	if calificaciones:
+		return sum(calificaciones)/(len(calificaciones))
+	else:
+		return 0
 	
 def determinar_estado(calificaciones: list[int], umbral:int):
 	aprobados=[]
@@ -56,28 +58,22 @@ def determinar_estado(calificaciones: list[int], umbral:int):
 	return aprobados, desaprobados
 
 def encontrar_extremos(calificaciones: list[int]):
-	maximo=0
-	indiceMax=0
-	minimo=calificaciones[0]
-	indiceMin=0
-	for i in range(len(calificaciones)):
-		if calificaciones[i] < minimo: 
-			minimo=calificaciones[i]
-			indiceMin=i
-		if calificaciones[i] > maximo: 
-			maximo=calificaciones[i]
-			indiceMax=i
+	maximo=max(calificaciones)
+	indiceMax=calificaciones.index(maximo)
+	minimo=min(calificaciones)
+	indiceMin=calificaciones.index(minimo)
 	return indiceMax, indiceMin
 	
-def imprimirMaterias(aprobados: list[int], desaprobados: list[int], asignaturas: list[str], calificaciones: list[int]):
+def mostrar_resumen(aprobados: list[int], desaprobados: list[int], asignaturas: list[str], calificaciones: list[int]):
 	print("\nRESUMEN DE MATERIAS")
 	print("-----------------------")
-	status=""
+	estado=""
 	for i in range(len(asignaturas)):
-		if i in desaprobados: status="DESAPROBADO"
-		if i in aprobados: status="APROBADO"
-		print(f"A{i+1}: {asignaturas[i]} / {calificaciones[i]}, Estado: {status}")
+		if i in desaprobados: estado="DESAPROBADO"
+		if i in aprobados: estado="APROBADO"
+		print(f"A{i+1}: {asignaturas[i]} / {calificaciones[i]}, Estado: {estado}")
 	print("-----------------------")
 
 if __name__ == '__main__':
 	main()
+	print("Hasta luego!")
