@@ -1,7 +1,12 @@
 def main():
 	asignaturas, calificaciones = ingresar_calificaciones()
 	if calificaciones:
-		aprobados, desaprobados = determinar_estado(calificaciones)
+		try:
+			umbral = float(input("Ingresa el valor del umbral (predeterminado=5): "))
+		except ValueError:
+			print("Umbral incorrecto, valor predeterminado del umbral: 5")
+			umbral = 5.0
+		aprobados, desaprobados = determinar_estado(calificaciones, umbral)
 		promedio = calcular_promedio(calificaciones)
 		mostrar_resumen(aprobados, desaprobados, asignaturas,calificaciones)
 		print(f"\nPromedio de asignaturas: {round(promedio,2)}")
@@ -45,11 +50,6 @@ def calcular_promedio(calificaciones: list[float]) -> float:
 def determinar_estado(calificaciones: list[int], umbral=5.0):
 	aprobados=[]
 	desaprobados=[]
-	try:
-		umbral = float(input("Ingresa el valor del umbral (predeterminado=5): "))
-	except ValueError:
-		print("Umbral incorrecto, valor predeterminado del umbral: 5")
-
 	for i in range(len(calificaciones)):
 		if calificaciones[i]<umbral:
 			desaprobados.append(i)
