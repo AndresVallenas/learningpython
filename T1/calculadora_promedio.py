@@ -36,7 +36,7 @@ def ingresar_calificaciones():
 		numAsignatura+=1
 	return asignaturas,calificaciones
 	
-def calcular_promedio(calificaciones: list[int]) -> int:
+def calcular_promedio(calificaciones: list[float]) -> float:
 	if calificaciones:
 		return sum(calificaciones)/(len(calificaciones))
 	else:
