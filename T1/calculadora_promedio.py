@@ -47,7 +47,7 @@ def calcular_promedio(calificaciones: list[float]) -> float:
 	else:
 		return 0
 	
-def determinar_estado(calificaciones: list[int], umbral=5.0):
+def determinar_estado(calificaciones: list[float], umbral=5.0):
 	aprobados=[]
 	desaprobados=[]
 	for i in range(len(calificaciones)):
@@ -57,14 +57,14 @@ def determinar_estado(calificaciones: list[int], umbral=5.0):
 			aprobados.append(i)
 	return aprobados, desaprobados
 
-def encontrar_extremos(calificaciones: list[int]):
+def encontrar_extremos(calificaciones: list[float]):
 	maximo=max(calificaciones)
 	indiceMax=calificaciones.index(maximo)
 	minimo=min(calificaciones)
 	indiceMin=calificaciones.index(minimo)
 	return indiceMax, indiceMin
 	
-def mostrar_resumen(aprobados: list[int], desaprobados: list[int], asignaturas: list[str], calificaciones: list[int]):
+def mostrar_resumen(aprobados: list[int], desaprobados: list[int], asignaturas: list[str], calificaciones: list[float]):
 	print("\nRESUMEN DE MATERIAS")
 	print("-----------------------")
 	estado=""
