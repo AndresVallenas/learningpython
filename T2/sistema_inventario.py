@@ -1,39 +1,36 @@
 class Producto:
 	def __init__(self, nombre:str, precio:float, cantidad:int):
+		if not isinstance(nombre,str):
+			raise TypeError("El nombre debe ser una cadena de texto.")
 		if not nombre.strip():
 			raise ValueError("Nombre incorrecto.")
 		else:
 			self.nombre=nombre.strip()
-			
-		if precio>=0:
-			self.precio=precio
-		else:
-			raise ValueError("Precio incorrecto. No puede ser menor que 0.")
-		if cantidad>=0:
-			self.cantidad=cantidad
-		else:
-			raise ValueError("Cantidad incorrecta.")
+		
+		self.actualizar_precio(precio)
+		self.actualizar_cantidad(cantidad)
 	
 	def actualizar_cantidad(self, nueva_cantidad:int):
-		if nueva_cantidad>=0:
-			self.cantidad=nueva_cantidad
+		if not isinstance(nueva_cantidad,int):
+			raise TypeError("La cantidad debe ser un número valido")
+		if nueva_cantidad<0:
+			raise ValueError("Nueva cantidad no puede ser menor que 0")
 		else:
-			raise ValueError("Nueva cantidad no puede ser menor que 0.")
+			self.cantidad=nueva_cantidad
 	
 	def actualizar_precio(self, nuevo_precio:float):
-		if nuevo_precio>=0:
-			self.precio=nuevo_precio
+		if not isinstance(nuevo_precio,(int,float)):
+			raise TypeError("El precio debe ser un número valido")
+		if nuevo_precio<0:
+			raise ValueError("Nuevo precio no puede serW menor que 0")
 		else:
-			raise ValueError("Nuevo precio no puede ser menor que 0.")
+			self.precio=float(nuevo_precio)
 
 	def calcular_valor_total(self)->float:
 		return self.precio * self.cantidad
 	
-	def __str__(self):
-		print(f"Producto: {self.nombre}")
-		print(f"Cantidad: {self.cantidad}")
-		print(f"Precio: {self.precio}")
-		return ''
+	def __str__(self)->str:
+		return 'Producto: {}\nCantidad: {}\nPrecio: {}'.format(self.nombre, self.cantidad, self.precio)
 		
 class Inventario:
 	def __init__(self):
@@ -81,12 +78,8 @@ def imprimir_menu():
 def menu_principal(inventario: Inventario)->None:
 	while True:
 		imprimir_menu()
-		try:
-			opcion = input("Ingrese una opcion: ")
-		except ValueError:
-			print("ERROR. Opcion incorrecta")
-			continue
-			
+		opcion = input("Ingrese una opcion: ")
+		
 		match opcion:
 			case "1":
 				print("Ingrese los datos del nuevo producto:")
@@ -97,25 +90,31 @@ def menu_principal(inventario: Inventario)->None:
 					producto= Producto(nombre,precio,cantidad)
 					inventario.agregar_producto(producto)
 					print("EXITO. Producto agregado correctamente")
-				except ValueError as error:
+				except (ValueError,TypeError) as error:
 					print(f"ERROR: {error}")
 				
 			case "2":
 				nombre=input("Ingrese el nombre del producto a buscar: ")
-				producto=inventario.buscar_producto(nombre)
-				if producto is None:
-					print("Lo siento, producto no encontrado")
-				else:
+				try:
+					producto=inventario.buscar_producto(nombre)
+					if producto is None:
+						raise LookupError("Lo siento, producto no encontrado.")
 					print("EXITO, se encontro el producto")
 					print(producto)
+				except LookupError as error:
+					print(f"ERROR: {error}")
+					
 			case "3":
 				inventario.listar_productos()
+				
 			case "4":
 				total = inventario.calcular_valor_inventario()
 				print(f"EXITO. Valor total: {round(total,2)}")
+				
 			case "5":
 				print("Hasta luego!")
 				break
+				
 			case _:
 				print("ERROR. Opcion incorrecta")
 				continue
