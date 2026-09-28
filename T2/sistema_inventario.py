@@ -1,38 +1,39 @@
 class Producto:
 	def __init__(self, nombre:str, precio:float, cantidad:int):
 		if not nombre.strip():
-			raise ValueError("El nombre no puede estar vacío.")
+			raise ValueError("Nombre incorrecto.")
 		else:
 			self.nombre=nombre.strip()
 			
 		if precio>=0:
 			self.precio=precio
 		else:
-			raise ValueError("Precio incorrecto. No puede ser menor que 0")
+			raise ValueError("Precio incorrecto. No puede ser menor que 0.")
 		if cantidad>=0:
 			self.cantidad=cantidad
 		else:
-			raise ValueError("Cantidad incorrecto. No puede ser menor que 0")
+			raise ValueError("Cantidad incorrecta.")
 	
 	def actualizar_cantidad(self, nueva_cantidad:int):
 		if nueva_cantidad>=0:
 			self.cantidad=nueva_cantidad
 		else:
-			raise ValueError("Nueva cantidad no puede ser menor que 0")
+			raise ValueError("Nueva cantidad no puede ser menor que 0.")
 	
 	def actualizar_precio(self, nuevo_precio:float):
 		if nuevo_precio>=0:
 			self.precio=nuevo_precio
 		else:
-			raise ValueError("Nuevo precio no puede ser menor que 0")
+			raise ValueError("Nuevo precio no puede ser menor que 0.")
 
 	def calcular_valor_total(self)->float:
 		return self.precio * self.cantidad
 	
 	def __str__(self):
-		print(f"Producto {self.nombre}:")
+		print(f"Producto: {self.nombre}")
 		print(f"Cantidad: {self.cantidad}")
 		print(f"Precio: {self.precio}")
+		return ''
 		
 class Inventario:
 	def __init__(self):
@@ -40,7 +41,7 @@ class Inventario:
 		
 	def agregar_producto(self, producto:Producto):
 		if not isinstance(producto, Producto):
-			raise TypeError("Solo se pueden agregar objetos de tipo Producto")
+			raise TypeError("Solo se pueden agregar objetos de tipo Producto.")
 		else:
 			self.lista_productos.append(producto)
 		
@@ -63,12 +64,12 @@ class Inventario:
 		else:
 			print("En este inventario, hay los siguientes productos:")
 			for i in range(len(self.lista_productos)):
-				print(f"Producto {i+1}")
+				print(f" Producto {i+1}")
 				print("-----------------")
 				print(self.lista_productos[i])
 		
 def imprimir_menu():
-	print("MENU DE OPCIONES")
+	print("\nMENU DE OPCIONES")
 	print("------------------------")
 	print("1. Agregar producto")
 	print("2. Buscar producto")
@@ -88,25 +89,32 @@ def menu_principal(inventario: Inventario)->None:
 			
 		match opcion:
 			case "1":
-				print("Ingrese los datos del nuevo producto")
-				nombre=input("Nombre: ")
-				precio=float(input("Precio: "))
-				cantidad=int(input("Cantidad: "))
-				producto= Producto(nombre,precio,cantidad)
-				inventario.agregar_producto(producto)
+				print("Ingrese los datos del nuevo producto:")
+				try: 
+					nombre=input("Nombre: ")
+					precio=float(input("Precio: "))
+					cantidad=int(input("Cantidad: "))
+					producto= Producto(nombre,precio,cantidad)
+					inventario.agregar_producto(producto)
+					print("EXITO. Producto agregado correctamente")
+				except ValueError as error:
+					print(f"ERROR: {error}")
+				
 			case "2":
 				nombre=input("Ingrese el nombre del producto a buscar: ")
 				producto=inventario.buscar_producto(nombre)
 				if producto is None:
-					print("Producto no encontrado")
+					print("Lo siento, producto no encontrado")
 				else:
+					print("EXITO, se encontro el producto")
 					print(producto)
 			case "3":
 				inventario.listar_productos()
 			case "4":
 				total = inventario.calcular_valor_inventario()
-				print(f"Valor total: {round(total,2)}")
+				print(f"EXITO. Valor total: {round(total,2)}")
 			case "5":
+				print("Hasta luego!")
 				break
 			case _:
 				print("ERROR. Opcion incorrecta")
